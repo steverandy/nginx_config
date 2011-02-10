@@ -11,7 +11,7 @@ server {
   root /path/to/public;
   passenger_enabled on;
   client_max_body_size 30m;
-  add_header "X-UA-Compatible" "IE=edge,chrome=1";
+  add_header X-UA-Compatible "IE=edge,chrome=1";
 
   location ~* \.(js|css|jpg|jpeg|gif|png)$ {
     if (!-f $request_filename) {
