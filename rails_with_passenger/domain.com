@@ -25,7 +25,7 @@ server {
   }
   
   # Only use this block for serving files with MongoDB GridFS.
-  # location ^~ /gridfs/ {
+  #location ^~ /gridfs/ {
     #expires max;
     #gridfs steverandytantra_production
       #field=filename
