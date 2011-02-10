@@ -23,6 +23,17 @@ server {
       break;
     }
   }
+  
+  # Only use this block for serving files with MongoDB GridFS.
+  # location ^~ /gridfs/ {
+    #expires max;
+    #gridfs steverandytantra_production
+      #field=filename
+      #type=string
+      #user=username
+      #pass=password;
+    #mongo 127.0.0.1:27017;
+  #}
 
   if (-f $document_root/system/maintenance.html) {
     return 503;
