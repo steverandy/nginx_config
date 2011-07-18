@@ -1,9 +1,14 @@
 # Nginx Configuration
 
-Nginx version: 0.8.54
+Nginx Version: 1.0.4
 
 ## Rails with Passenger
-- Compile Nginx with these modules:
+
+Compile Nginx with these modules:
   - Passenger
   - HttpGzipStaticModule
-  - GridFS (optional for serving files with MongoDB)
+
+## Rails with Unicorn
+
+Compile Nginx with these modules:
+  - HttpGzipStaticModule

@@ -1,3 +1,4 @@
+# Upstream name must be unique.
 upstream application_app_server {
   server unix:/path/to/unicorn.sock fail_timeout=0;
 }
@@ -10,7 +11,7 @@ server {
 
 server {
   listen 80;
-  server_name domain.com controlcenter.domain.com;
+  server_name domain.com subdomain.domain.com;
   access_log logs/domain.com.access.log main;
   client_max_body_size 30m;
   add_header X-UA-Compatible "IE=edge,chrome=1";
@@ -18,13 +19,15 @@ server {
 
   try_files $uri/index.html $uri.html $uri @app;
 
-  location ^~ /gridfs/ {
-    proxy_ignore_headers Set-Cookie;
-    proxy_hide_header Set-Cookie;
-    proxy_cache all;
-    proxy_pass http://application_app_server;
-  }
+  # Used only for serving files from MongoDB GridFS.
+  # location ^~ /gridfs/ {
+  #   proxy_ignore_headers Set-Cookie;
+  #   proxy_hide_header Set-Cookie;
+  #   proxy_cache all;
+  #   proxy_pass http://application_app_server;
+  # }
 
+  # Used only for serving static files.
   location ~* \.(js|css|jpg|jpeg|gif|png)$ {
     if (!-f $request_filename) {
       proxy_pass http://application_app_server;
@@ -36,6 +39,7 @@ server {
     }
   }
 
+  # Used to pass the request to unicorn.
   location @app {
     # proxy_set_header X-Forwarded-Proto https; # Enable this if and only if you use HTTPS.
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -46,6 +50,7 @@ server {
     proxy_pass http://application_app_server;
   }
 
+  # Used for serving maintenance page.
   location @503 {
     error_page 405 = /system/maintenance.html;
     if (-f $request_filename) {
@@ -54,6 +59,7 @@ server {
     rewrite ^(.*)$ /system/maintenance.html break;
   }
 
+  # Show maintenance page if the file exists.
   if (-f $document_root/system/maintenance.html) {
     return 503;
   }
